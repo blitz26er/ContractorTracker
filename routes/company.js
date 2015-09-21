@@ -23,8 +23,8 @@ router.route('/company')
     .get(function(req, res) {
         var item = req.body;
         item['user_id'] = req.session.user['_id'];
-        company.find(item, function(err, users) {
-            res.json(users);
+        Company.find(item, function(err, companies) {
+            res.json(companies);
         });
     });
 
