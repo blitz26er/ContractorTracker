@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login</title>
+</head>
+<body class="hold-transition login-page">
+	<form action="signing/signin" method="post">
+		<p>
+			Username:<br/>
+			<input name="email" type="text" placeholder="Email" <% if(locals.email) {%> value="<%=email%>" <% } %>>
+		</p>
+		<p>
+			Password:<br/>
+			<input name="password" type="password" placeholder="Password" <% if(locals.password) { %> value="<%=password%>" <% } %> >
+		</p>
+		<p>
+			<button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+		</p>
+	</form>
+  </body>
+</html>
