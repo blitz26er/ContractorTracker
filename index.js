@@ -1,20 +1,48 @@
+var path = require('path');
 var express = require('express');
 var app = express();
+var session = require('express-session');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var morgan = require('morgan');
+var mongoose = require('mongoose');
+var http = require('http');
+var jwt = require('jsonwebtoken');
+var config = require('./config');
 
-app.set('port', (process.env.PORT || 5000));
 
-app.use(express.static(__dirname + '/public'));
+// ==================================================================
+// Configuration 
+// ==================================================================
 
-// views is directory for all template files
-app.set('views', __dirname + '/views');
+app.set('http_port', (process.env.PORT || config.http_port)); // configuration port
+mongoose.connect(config.database);		// connect to database
+
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(express.static(path.join(__dirname,'/public'))); // public path
+
+// use for rendering template
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+// session configuration
+app.use(cookieParser('notsosecretkey'));
+app.use(session({
+    resave: true,
+    saveUninitialized: true,
+    secret: "notsosecretkey",
+}));
+
+// ==================================================================
+// Routes
+// ==================================================================
 app.get('/', function(request, response) {
-  response.render('pages/index');
+  	response.render('pages/index');
 });
 
-app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
+app.listen(app.get('http_port'), function() {
+  	console.log('Node app is running on port', app.get('http_port'));
 });
 
 
