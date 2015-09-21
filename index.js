@@ -10,11 +10,9 @@ var http = require('http');
 var jwt = require('jsonwebtoken');
 var config = require('./config');
 
-
 // ==================================================================
 // Configuration 
 // ==================================================================
-
 app.set('http_port', (process.env.PORT || config.http_port)); // configuration port
 mongoose.connect(config.database);		// connect to database
 
@@ -37,12 +35,18 @@ app.use(session({
 // ==================================================================
 // Routes
 // ==================================================================
-app.get('/', function(request, response) {
-  	response.render('login');
+app.use('/signing', require('./routes/signing'));       // signing
+app.use('/protected', require('./routes/validate'));    // user validation
+app.use('/protected', require('./routes/company'));     // company manager
+app.get('/', function(req, res) {
+	if(req.session.user) {
+		res.render('index');
+	} else {
+		console.log(req.session.user);
+		res.render('login', req.session.user);
+	}
 });
 
 app.listen(app.get('http_port'), function() {
   	console.log('Node app is running on port', app.get('http_port'));
 });
-
-
