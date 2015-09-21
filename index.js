@@ -36,7 +36,7 @@ app.use(session({
 // Routes
 // ==================================================================
 app.use('/signing', require('./routes/signing'));       // signing
-// app.use('/protected', require('./routes/validate'));    // user validation
+app.use('/protected', require('./routes/validate'));    // user validation
 // app.use('/protected', require('./routes/company'));     // company manager
 app.get('/', function(req, res) {
 	if(req.session.user) {
