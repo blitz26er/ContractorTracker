@@ -38,7 +38,7 @@ app.use(session({
 // Routes
 // ==================================================================
 app.get('/', function(request, response) {
-  	response.render('index');
+  	response.render('login');
 });
 
 app.listen(app.get('http_port'), function() {
