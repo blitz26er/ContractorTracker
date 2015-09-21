@@ -23,7 +23,9 @@ router.route('/company')
     .get(function(req, res) {
         var item = req.body;
         item['user_id'] = req.session.user['_id'];
-        company.find()
+        company.find(item, function(err, users) {
+            res.json(users);
+        });
     });
 
 router.route('/company/:id')
