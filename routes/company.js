@@ -1,7 +1,7 @@
 var config = require('../config');
 var express = require('express');
 var router = express.Router();
-var Company = require('../models/Company');
+var Company = require('../models/company');
 
 // ----------------------------------------------------
 router.route('/company')
