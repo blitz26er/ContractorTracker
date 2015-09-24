@@ -1,6 +1,7 @@
 var express = require('express');
 var jwt = require('jsonwebtoken');
 var config = require('../config');
+var validator = require('validator');
 var router = express.Router();
 // ==================================================================
 // Signin, Signout
@@ -45,4 +46,50 @@ router.route('/signout').
 	  	});
 	});
 
+router.route('/signup').
+	post(function(req, res) {
+		var item = req.body;
+
+		if(validator.isNull(item.firstname)) {
+			res.json({success: false, message: 'Firstname cannot be blank.'});
+			return;
+		}
+
+		if(validator.isNull(item.lastname)) {
+			res.json({success: false, message: 'Lastname cannot be blank.'});
+			return;
+		}
+
+		if(validator.isNull(item.email)) {
+			res.json({success: false, message: 'Email cannot be blank.'});
+			return;
+		}
+
+		if(validator.isEmail(item.emial)) {
+			res.json({success: false, message: 'Email is not valid.'});
+			return;
+		}
+
+		if(validator.isNull(item.password)) {
+			res.json({success: false, message: 'Password cannot be blank.'});
+			return;
+		}
+
+		User.findOne({
+	        email: item.email
+	    }, function(err, user) {
+	    	if(!user) {
+	    		user = new User(item);
+	    		user.save(function(err) {
+	    			if(err) {
+	    				res.json({success: false, message: 'Register fail.'});
+	    			} else {
+	    				res.json({success: true, message: 'Register success.'});
+	    			}
+	    		});
+	    	} else {
+	    		res.json({success: false, message: 'User email already exist.'});
+	    	}
+	    });
+	});
 module.exports = router;
