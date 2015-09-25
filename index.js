@@ -1,8 +1,8 @@
 var path = require('path');
 var express = require('express');
 var app = express();
-var session = require('express-session');
-var cookieParser = require('cookie-parser');
+// var session = require('express-session');
+// var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var mongoose = require('mongoose');
@@ -25,12 +25,12 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // session configuration
-app.use(cookieParser('notsosecretkey'));
-app.use(session({
-    resave: true,
-    saveUninitialized: true,
-    secret: "notsosecretkey",
-}));
+// app.use(cookieParser('notsosecretkey'));
+// app.use(session({
+//     resave: true,
+//     saveUninitialized: true,
+//     secret: "notsosecretkey",
+// }));
 
 // allow cross domain
 app.use(function(req, res, next) {

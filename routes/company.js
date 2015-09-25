@@ -8,7 +8,7 @@ router.route('/company')
     // create a company (accessed at POST /)
     .post(function(req, res) {
         var item = req.body;
-        item['user_id'] = req.session.user['_id'];
+        item['user_id'] = req.profile['_id'];
         var company = new Company(req.body);			// create a new instance of the Company model
         
         // save the company and check for errors
@@ -22,7 +22,7 @@ router.route('/company')
 
     .get(function(req, res) {
         var item = req.body;
-        item['user_id'] = req.session.user['_id'];
+        item['user_id'] = req.profile['_id'];
         Company.find(item, function(err, companies) {
             res.json(companies);
         });

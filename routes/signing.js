@@ -21,29 +21,22 @@ router.route('/signin').
 	            	var token = jwt.sign(user, config.secret, {
 	                    expiresInMinutes: 1440 // expires in 24 hours
 	                });
-		    		req.session.user = user;
-					res.cookie('access_token', token, {maxAge: 60*1440});
 		    		res.json({
 						success: true,
 		                message: 'Authentication succeded.',
+		                access_token: token
 		            });
                 }
 	    	}
-	    	
 	    });
 	});
 
 router.route('/signout').
 	get(function(req, res) {
-	    console.log(req.session.user);
-	    res.clearCookie('access_token');
-	    req.session.destroy(function(err) {
-	    	// cannot access session here
-	    	res.json({
-	    		success: true,
-	    		message: 'Signout succeded.'
-	    	});
-	  	});
+    	res.json({
+    		success: true,
+    		message: 'Signout succeded.'
+    	});
 	});
 
 router.route('/signup').
