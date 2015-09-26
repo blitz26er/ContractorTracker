@@ -38,13 +38,12 @@ router.route('/company/:id')
 	    Company.findById(req.params.id, function(err, company) {
 	        if (err)
 	            res.send(err);
-            var task_param = {company_id: company['_id']};
-            Task.find(task_param, function(err, tasks) {
+            Task.find({company_id: req.params.id}, function(err, tasks) {
                 if(err)
                     res.send(err);
                 var company_item = company.toObject();
                 company_item.tasks = tasks;
-                res.json(company);
+                res.json(company_item);
             });
 		});
 	})
