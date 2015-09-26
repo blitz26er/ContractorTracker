@@ -43,10 +43,10 @@ app.use(function(req, res, next) {
 // Routes
 // ==================================================================
 app.use('/signing', require('./routes/signing'));       // signing
-app.use('/protected', require('./routes/validate'));    // user validation
-app.use('/protected', require('./routes/company'));     // company manager
-app.use('/protected', require('./routes/home'));        // home
-app.use('/protected', require('./routes/user'));
+//app.use('/protected', require('./routes/validate'));    // user validation
+//app.use('/protected', require('./routes/company'));     // company manager
+//app.use('/protected', require('./routes/home'));        // home
+//app.use('/protected', require('./routes/user'));
 app.get('/', function(req, res) {
 	if(req.session.user) {
 		res.render('index');
