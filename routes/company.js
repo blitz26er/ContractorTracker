@@ -16,7 +16,10 @@ router.route('/company')
         company.save(function(err) {
             if (err)
                 res.send(err);
-            res.json({success: true, message: 'Company created!'});
+            var company_item = company.toObject();
+            company_item.success = true;
+            company_item.message = 'Company created successfully.';
+            res.json(company_item);
         });
         
     })
@@ -39,8 +42,8 @@ router.route('/company/:id')
             Task.find(task_param, function(err, tasks) {
                 if(err)
                     res.send(err);
-                var company_detail = company.toObject();
-                company_detail.tasks = tasks;
+                var company_item = company.toObject();
+                company_item.tasks = tasks;
                 res.json(company);
             });
 		});
