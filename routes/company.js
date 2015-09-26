@@ -2,6 +2,7 @@ var config = require('../config');
 var express = require('express');
 var router = express.Router();
 var Company = require('../models/company');
+var Task = require('../models/task');
 
 // ----------------------------------------------------
 router.route('/company')
@@ -34,7 +35,14 @@ router.route('/company/:id')
 	    Company.findById(req.params.id, function(err, company) {
 	        if (err)
 	            res.send(err);
-	        res.json(company);
+            var task_param = {company_id: company['_id']};
+            Task.find(task_param, function(err, tasks) {
+                if(err)
+                    res.send(err);
+                var company_detail = company.toObject();
+                company_detail.tasks = tasks;
+                res.json(company);
+            });
 		});
 	})
 
@@ -44,8 +52,7 @@ router.route('/company/:id')
 	        if (err)
 	            res.send(err);
 
-	        company.name = req.body.name;
-	        company.description = req.body.description;
+	        company.set(req.body);
 	        // save the company
 	        company.save(function(err) {
 	            if (err)
