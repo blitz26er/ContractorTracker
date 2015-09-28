@@ -8,7 +8,11 @@ var router = express.Router();
 
 //route middleware to verify a token
 router.use(function(req, res, next) {
+    
     // check header or url parameters or post parameters for token
+    if(req.method == 'OPTIONS') {
+        return next();
+    }
     var token = req.headers['access_token'];
     // decode token
     if (token) {
@@ -16,8 +20,7 @@ router.use(function(req, res, next) {
         // verifies secret and checks exp
         jwt.verify(token, config.secret, function(err, decoded) {      
             if (err) {
-                console.log('1111111111111111111111111111111111111111111111');
-                return res.json({success: false, message: 'Failed to authenticate token.'});
+                return res.status(403).json({success: false, message: 'Failed to authenticate token.'});
             } else {
                 // if everything is good, save to request for use in other routes
                 req.profile = decoded;
@@ -26,8 +29,7 @@ router.use(function(req, res, next) {
         });
     } else {
         // if there is no token
-        console.log('222222222222222222222222222222222222222222222222222222');
-        return res.json({success: false, message: 'No token provided.'});
+        return res.status(403).json({success: false, message: 'No token provided.'});
     }
 });
 module.exports = router;
