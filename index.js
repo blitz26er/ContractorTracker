@@ -34,8 +34,10 @@ app.set('view engine', 'ejs');
 
 // allow cross domain
 app.use(function(req, res, next) {
-  	res.header("Access-Control-Allow-Origin", "*");
-  	res.header("Access-Control-Allow-Headers", "access_token, Origin, X-Requested-With, Content-Type, Accept");
+  	res.header('Access-Control-Allow-Origin', '*');
+  	res.header('Access-Control-Allow-Headers', 'access_token, Origin, X-Requested-With, Content-Type, Accept');
+  	res.header('Access-Control-Allow-Headers', 'access_token, Origin, X-Requested-With, Content-Type, Accept"');
+  	res.header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
  	next();
 });
 
