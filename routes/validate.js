@@ -24,7 +24,7 @@ router.use(function(req, res, next) {
         });
     } else {
         // if there is no token
-        return res.status(500).send({success: false, message: 'No token provided.'});
+        return res.status(500).json({success: false, message: 'No token provided.'});
     }
 });
 module.exports = router;
