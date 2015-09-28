@@ -16,7 +16,8 @@ router.use(function(req, res, next) {
         // verifies secret and checks exp
         jwt.verify(token, config.secret, function(err, decoded) {      
             if (err) {
-                return res.status(500).json({success: false, message: 'Failed to authenticate token.'});
+                console.log('1111111111111111111111111111111111111111111111');
+                return res.status(403).json({success: false, message: 'Failed to authenticate token.'});
             } else {
                 // if everything is good, save to request for use in other routes
                 req.profile = decoded;
@@ -25,7 +26,8 @@ router.use(function(req, res, next) {
         });
     } else {
         // if there is no token
-        return res.status(500).json({success: false, message: 'No token provided.'});
+        console.log('222222222222222222222222222222222222222222222222222222');
+        return res.status(403).json({success: false, message: 'No token provided.'});
     }
 });
 module.exports = router;
