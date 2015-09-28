@@ -15,7 +15,7 @@ router.route('/user')
     })
 
     // update a user (accessed at PUT /)
-    .put(function(req, res) {
+    .put(function(req, res, next) {
         var item = req.body;
         
         User.findById(req.profile['_id'], function(err, user) {
@@ -24,7 +24,8 @@ router.route('/user')
             // save the user and check for errors
             user.save(function(err) {
                 if (err) {
-                    res.send(err);
+                    err.message = 'Cannot update user.';
+                    return next(err);
                 }
                 res.json({success: true, message: 'User updated successfully.'});
             });

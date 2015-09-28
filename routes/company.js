@@ -6,25 +6,34 @@ var Task = require('../models/task');
 
 // ----------------------------------------------------
 router.route('/company')
+
     // create a company (accessed at POST /)
-    .post(function(req, res) {
+    .post(function(req, res, next) {
         var item = req.body;
         item['user_id'] = req.profile['_id'];
         var company = new Company(req.body);			// create a new instance of the Company model
         
         // save the company and check for errors
         company.save(function(err) {
-            if (err)
-                res.send(err);
-            var company_item = company.toObject();
+            if (err) {
+                return next(err);
+            }
+            var company_item;
+            try {
+                company_item = company.toObject();
+            } catch(err) {
+                err.message = 'Cannot create company.';
+                return next(err);
+            }
             company_item.success = true;
             company_item.message = 'Company created successfully.';
+            company_item.tasks = [];
             res.json(company_item);
         });
         
     })
 
-    .get(function(req, res) {
+    .get(function(req, res, next) {
         var item = req.body;
         item['user_id'] = req.profile['_id'];
         Company.find(item, function(err, companies) {
@@ -33,15 +42,26 @@ router.route('/company')
     });
 
 router.route('/company/:id')
+
 	// get the company with that id (accessed at company/:id)
-	.get(function(req, res) {
+	.get(function(req, res, next) {
 	    Company.findById(req.params.id, function(err, company) {
-	        if (err)
-	            res.send(err);
+	        if (err) {
+                err.message = 'Cannot get company.';  
+                return next(err);
+            }
             Task.find({company_id: req.params.id}, function(err, tasks) {
-                if(err)
-                    res.send(err);
-                var company_item = company.toObject();
+                if(err) {
+                    err.message = 'Cannot get task.';
+                    return next(err);
+                }
+                var company_item;
+                try {
+                    company_item = company.toObject();
+                } catch(err) {
+                    err.message = 'Cannot get company.';
+                    return next(err);
+                }
                 company_item.tasks = tasks;
                 res.json(company_item);
             });
@@ -49,30 +69,35 @@ router.route('/company/:id')
 	})
 
 	// update the company with this id (accessed at PUT company/:id)
-	.put(function(req, res) {
+	.put(function(req, res, next) {
 	    Company.findById(req.params.id, function(err, company) {
-	        if (err)
-	            res.send(err);
+	        if (err) {
+                err.message = 'Submitted data is incorrect.';
+	            return next(err);
+            }
 
 	        company.set(req.body);
 	        // save the company
 	        company.save(function(err) {
-	            if (err)
-	                res.send(err);
-	            res.json({success: true, message: 'Company updated'});
+	            if (err) {
+                    err.message = 'Cannot update the company.';
+                    return next(err);
+                }
+	            res.json({success: true, message: 'Company updated successfully.'});
 	        });
 	    });
     })
 
     // delete the Company with this id (accessed at DELETE company/:id)
-    .delete(function(req, res) {
+    .delete(function(req, res, next) {
         Company.remove({
             _id: req.params.id
-        }, function(err, bear) {
-            if (err)
-                res.send(err);
-
-            res.json({success: true, message:'Successfully deleted.'});
+        }, function(err, company) {
+            if (err) {
+                err.message = 'Cannot delete company.';
+                return next(err);
+            }
+            res.json({success: true, message:'Company deleted successfully.'});
         });
     });
 

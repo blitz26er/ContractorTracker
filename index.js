@@ -36,7 +36,7 @@ app.set('view engine', 'ejs');
 app.use(function(req, res, next) {
   	res.header("Access-Control-Allow-Origin", "*");
   	res.header("Access-Control-Allow-Headers", "access_token, Origin, X-Requested-With, Content-Type, Accept");
-  next();
+ 	next();
 });
 
 // ==================================================================
@@ -47,8 +47,15 @@ app.use('/protected', require('./routes/validate'));    // user validation
 app.use('/protected', require('./routes/company'));     // company manager
 app.use('/protected', require('./routes/home'));        // home
 app.use('/protected', require('./routes/user'));
+
 app.get('/', function(req, res) {
 	res.render('index');
+});
+
+// Error Handling
+app.use(function(err, req, res, next) {
+  console.error(err);
+  res.status(500).json({success:false, message:err.message});
 });
 
 app.listen(app.get('http_port'), function() {
