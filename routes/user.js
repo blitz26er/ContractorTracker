@@ -7,9 +7,13 @@ var User = require('../models/user');
 router.route('/user')
 
     // get a user (accessed at GET /)
-    .get(function(req, res) {
+    .get(function(req, res, next) {
         var item = req.body;
         User.findById(req.profile['_id'], function(err, user) {
+            if(err) {
+                err.message = 'Cannot get user.';
+                return next(err);
+            }
             res.json(user);
         });
     })
@@ -27,19 +31,26 @@ router.route('/user')
                     err.message = 'Cannot update user.';
                     return next(err);
                 }
-                res.json({success: true, message: 'User updated successfully.'});
+
+                var user_item = user.toObject();
+                delete user_item.password;
+                user_item.success = true;
+                user_item.message = 'User updated successfully.';
+                res.json(user_item);
             });
         });
         
         
     })
+
     // delete the Company with this id (accessed at DELETE company/:id)
-    .delete(function(req, res) {
+    .delete(function(req, res, next) {
         User.remove({
             _id: req.profile['_id']
         }, function(err, user) {
             if (err) {
-                res.send(err);
+                err.message = 'Cannot delete user.';
+                return next(err);
             }
             res.json({success: true, message:'User deleted successfully.'});
         });
