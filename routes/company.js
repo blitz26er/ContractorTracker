@@ -83,7 +83,10 @@ router.route('/company/:id')
                     err.message = 'Cannot update the company.';
                     return next(err);
                 }
-	            res.json({success: true, message: 'Company updated successfully.'});
+                var company_item = company.toObject();
+                company_item.success = true;
+                company_item.message = 'Company updated successfully.';
+	            res.json(company);
 	        });
 	    });
     })
