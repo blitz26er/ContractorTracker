@@ -2,6 +2,7 @@ var config = require('../config');
 var express = require('express');
 var router = express.Router();
 var Task = require('../models/task');
+var Company = require('../models/company');
 
 // ---------------------------------------------------- 
 router.route('/task')
@@ -9,28 +10,38 @@ router.route('/task')
     // create a task (accessed at POST /)
     .post(function(req, res, next) {
         var item = req.body;
-        var task = new Task(req.body);			// create a new instance of the Task model
-        
-        // save the task and check for errors
-        task.save(function(err) {
-            if (err) {
-                err.message = 'Cannot create task.';
-                next(err);
+        if(!item.company_id) {
+            var err = new Error('Company is not defined.');
+            return next(err);
+        }
+
+        Company.findById(item.company_id, function(err, company) {
+            if(err || !company) {
+                err = new Error('Cannot find the company');
+                return next(err);
+            } else {
+                var task = new Task(item);      
+                // save the task and check for errors
+                task.save(function(err) {
+                    if (err) {
+                        err.message = 'Cannot create task.';
+                        return next(err);
+                    }
+                    var task_item = task.toObject();
+                    task_item.success = true;
+                    task_item.message = 'Task created successfully.';
+                    res.json(task_item);
+                });
             }
-            var task_item = task.toObject();
-            task_item.success = true;
-            task_item.message = 'Task created successfully.';
-            res.json(task_item);
         });
-        
     })
 
     .get(function(req, res, next) {
         var item = req.body;
-        Company.find(item, function(err, tasks) {
+        Task.find(item, function(err, tasks) {
             if(err) {
                 err.message = 'Cannot find tasks.';
-                next(err);
+                return next(err);
             }
             res.json(tasks);
         });
@@ -43,7 +54,7 @@ router.route('/task/:id')
 	    Task.findById(req.params.id, function(err, task) {
 	        if (err) {
                 err.message = 'Cannot get task.';
-	            next(err);
+	            return next(err);
             }
             res.json(task);
 		});
@@ -62,7 +73,7 @@ router.route('/task/:id')
 	        task.save(function(err) {
 	            if (err) {
                     err.message = 'Cannot update task.';
-	                next(err);
+	                return next(err);
                 }
                 var task_item = task.toObject();
                 task_item.success = true;
@@ -79,7 +90,7 @@ router.route('/task/:id')
         }, function(err, task) {
             if (err) {
                 err.message = 'Cannot delete task.';
-                next(err);
+                return next(err);
             }
             res.json({success: true, message:'Task deleted successfully.'});
         });
