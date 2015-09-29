@@ -18,7 +18,9 @@ router.route('/signin').
 	    		if (user.password != req.body.password) {
 	    			res.status(500).json({success: false, message: 'Authentication failed. Wrong password.'});
 	            } else {
-	            	var token = jwt.sign(user, config.secret, {
+	            	var user_item = user.toObject();
+	            	delete user_item.password;
+	            	var token = jwt.sign(user_item, config.secret, {
 	                    expiresInMinutes: 1440 // expires in 24 hours
 	                });
 		    		res.json({
@@ -40,32 +42,27 @@ router.route('/signout').
 	});
 
 router.route('/signup').
-	post(function(req, res) {
+	post(function(req, res, next) {
 		var item = req.body;
 
 		if(validator.isNull(item.firstname)) {
-			res.status(500).json({success: false, message: 'Firstname cannot be blank.'});
-			return;
+			return next(new Error('Firstname cannot be blank.'));
 		}
 
 		if(validator.isNull(item.lastname)) {
-			res.status(500).json({success: false, message: 'Lastname cannot be blank.'});
-			return;
+			return next(new Error('Lastname cannot be blank.'));
 		}
 
 		if(validator.isNull(item.email)) {
-			res.status(500).json({success: false, message: 'Email cannot be blank.'});
-			return;
+			return next(new Error('Email cannot be blank.'));
 		}
 
 		if(validator.isEmail(item.emial)) {
-			res.status(500).json({success: false, message: 'Email is not valid.'});
-			return;
+			return next(new Error('Email is not valid.'));
 		}
 
 		if(validator.isNull(item.password)) {
-			res.status(500).json({success: false, message: 'Password cannot be blank.'});
-			return;
+			return next(new Error('Password cannot be blank.'));
 		}
 
 		User.findOne({
@@ -75,13 +72,14 @@ router.route('/signup').
 	    		user = new User(item);
 	    		user.save(function(err) {
 	    			if(err) {
-	    				res.status(500).json({success: false, message: 'Register fail.'});
+	    				err.message = 'Register fail.';
+	    				return next(err);
 	    			} else {
 	    				res.json({success: true, message: 'Register success.'});
 	    			}
 	    		});
 	    	} else {
-	    		res.status(500).json({success: false, message: 'User email already exist.'});
+	    		return next(new Error('User email already exists.'));
 	    	}
 	    });
 	});

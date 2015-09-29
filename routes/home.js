@@ -12,7 +12,9 @@ router.route('/home')
         var user = User.findById(req.profile['_id'], function(err, user) {
             var key = {user_id: req.profile['_id']}; 
             Company.find(key, function(err, companies) {
-                return res.json({user: user, companies: companies});
+            	var user_item = user.toObject();
+            	delete user_item.password;
+                return res.json({user: user_item, companies: companies});
             });
         });
     });
