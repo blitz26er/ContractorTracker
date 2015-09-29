@@ -14,7 +14,9 @@ router.route('/user')
                 err.message = 'Cannot get user.';
                 return next(err);
             }
-            res.json(user);
+            var user_item = user.toObject();
+            delete user_item.password;
+            res.json(user_item);
         });
     })
 
