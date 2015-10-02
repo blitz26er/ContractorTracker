@@ -16,6 +16,9 @@ router.route('/job_company')
             }
             var company_items = [];
             var count = companies.length;
+            if(count == 0) {
+                return res.json(company_items);
+            }
             for(var i=0; i<companies.length; i++) {
                 var ret;
                 var company = companies[i];

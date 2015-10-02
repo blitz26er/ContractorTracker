@@ -30,10 +30,8 @@ router.route('/company')
             company_item.success = true;
             company_item.message = 'Company created successfully.';
             company_item.tasks = [];
-
             res.json(company_item);
         });
-        
     })
 
     .get(function(req, res, next) {
