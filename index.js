@@ -47,9 +47,10 @@ app.use(function(req, res, next) {
 app.use('/signing', require('./routes/signing'));       // signing
 app.use('/protected', require('./routes/validate'));    // user validation
 app.use('/protected', require('./routes/company'));     // company manager
-app.use('/protected', require('./routes/task'));		// task manager
+app.use('/protected', require('./routes/task'));		    // task manager
+app.use('/protected', require('./routes/job'));         // job
 app.use('/protected', require('./routes/home'));        // home
-app.use('/protected', require('./routes/user'));
+app.use('/protected', require('./routes/user'));        // user
 
 app.get('/', function(req, res) {
 	 res.render('index');

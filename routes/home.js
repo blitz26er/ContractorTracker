@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
 var Company = require('../models/company');
+var Job = require('../models/job');
 
 
 // ----------------------------------------------------
@@ -12,9 +13,11 @@ router.route('/home')
         var user = User.findById(req.profile['_id'], function(err, user) {
             var key = {user_id: req.profile['_id']}; 
             Company.find(key, function(err, companies) {
-            	var user_item = user.toObject();
-            	delete user_item.password;
-                return res.json({user: user_item, companies: companies});
+                Job.find(key, function(err, jobs) {
+                    var user_item = user.toObject();
+                    delete user_item.password;
+                    res.json({user: user_item, companies: companies, jobs: jobs});
+                });
             });
         });
     });
