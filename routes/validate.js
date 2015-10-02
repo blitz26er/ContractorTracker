@@ -16,7 +16,6 @@ router.use(function(req, res, next) {
     var token = req.headers['access_token'];
     // decode token
     if (token) {
-        console.log(token);
         // verifies secret and checks exp
         jwt.verify(token, config.secret, function(err, decoded) {      
             if (err) {

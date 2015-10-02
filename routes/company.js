@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var Company = require('../models/company');
 var Task = require('../models/task');
+var Shortid = require('shortid');
 
 // ----------------------------------------------------
 router.route('/company')
@@ -11,6 +12,7 @@ router.route('/company')
     .post(function(req, res, next) {
         var item = req.body;
         item['user_id'] = req.profile['_id'];
+        item['no'] = Shortid.generate();
         var company = new Company(req.body);			// create a new instance of the Company model
         
         // save the company and check for errors
@@ -28,6 +30,7 @@ router.route('/company')
             company_item.success = true;
             company_item.message = 'Company created successfully.';
             company_item.tasks = [];
+
             res.json(company_item);
         });
         

@@ -43,7 +43,6 @@ router.route('/task')
                 err.message = 'Cannot find tasks.';
                 return next(err);
             }
-            console.log(tasks);
             res.json(tasks);
         });
     });
