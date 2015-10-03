@@ -1,8 +1,7 @@
 var config = require('../config');
 var express = require('express');
 var router = express.Router();
-var Company = require('../models/company');
-var Job = require('../models/job');
+var JobReport = require('../models/report');
 var User = require('../models/user');
 var async = require('async');
 
@@ -41,35 +40,23 @@ router.route('/job')
 
     // create a job (accessed at POST /)
     .post(function(req, res, next) {
-        Company.findById(req.body.company_id, function(err, company) {
-            if(err) {
-                err.message = 'Cannot find company';
+        var item = req.body;
+        item['user_id'] = req.profile['_id'];
+        var job = new Job(req.body);    // create a new instance of the Job model
+        
+        // save the company and check for errors
+        job.save(function(err) {
+            if (err) {
                 return next(err);
             }
-
-            if(company == null) {
-                return next(new Error('Cannot find company'));
+            var company_item;
+            try {
+                company_item = company.toObject();
+            } catch(err) {
+                err.message = 'Cannot create job.';
+                return next(err);
             }
-
-            var job = new Job({
-                no: company.no, 
-                name: company.name, 
-                description: company.description, 
-                company_id: company._id,
-                user_id: req.profile._id
-            });
-
-            job.save(function(err) {
-                if(err) {
-                    err.message = 'Cannot register the job.';
-                    return next(err);
-                }
-
-                var job_item = job.toObject();
-                job_item.message = 'Job registered successfully.';
-                job_item.success = true;
-                res.json(job_item);
-            });
+            res.json(company_item);
         });
     })
 
