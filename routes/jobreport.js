@@ -4,12 +4,10 @@ var router = express.Router();
 var JobReport = require('../models/jobreport');
 var Job = require('../models/job');
 var Company = require('../models/company');
-var Task = require('../models/company');
+var Task = require('../models/task');
 var User = require('../models/user');
 
 // ----------------------------------------------------
-router.route('/company_job_report')
-
 router.route('/job_report')
     // get a job reports(accessed at GET)
     .get(function(req, res, next) {
@@ -17,7 +15,7 @@ router.route('/job_report')
         if(!item.report_date_from && !item.report_date_to) {
             return next(new Error('Cannot search job reports.'));
         }
-        item.report_date = {&gt: item.report_date_from, &lt: item.report_date_to};
+        item.report_date = {'&gt': item.report_date_from, '&lt': item.report_date_to};
         delete item.report_date_from;
         delete item.report_date_to;
         JobReport.find(item, function(err, jobreports) {
@@ -28,14 +26,14 @@ router.route('/job_report')
 
             res.json(jobreports);
         });
-    });
+    })
 
     // create a job (accessed at POST /)
     .post(function(req, res, next) {
         var item = req.body;
         item.user_id = req.profile._id;
         var jobreport = new JobReport(item);
-        jobreport.save(function err, message) {
+        jobreport.save(function(err) {
             if(err) {
                 err.message = 'Cannot create job report.';
                 return next(err);
@@ -55,15 +53,17 @@ router.route('/job_report')
         });
     });
 
-router.route('job_report/:id/:report_date')
+router.route('/job_report_detail')
     
     // get a job report(accessed at GET)
     .get(function(req, res, next) {
+        console.log(req.query);
         var item = req.query;
-        if(!item.report_date) {
+        if(!item.report_date || item.report_date == '') {
             item.report_date = new Date();
         }
         item.user_id = req.profile._id;
+        console.log(item);
         JobReport.findOne(item, function(err, jobreport) {
             if(err) {
                 err.message = 'Job is not exist.';
@@ -71,15 +71,21 @@ router.route('job_report/:id/:report_date')
             }
 
             if(jobreport == null) {
-                Job.findOne({_id: item.job_id}, function(err, job) {
-                    if(err || job == null) {
+                Job.findById(item.job_id, function(err, job) {
+                    if(err) {
                         err.message = 'Job is not exist.';
                         return next(err);
+                    } 
+                    if(job == null) {
+                        return next(new Error('Job is not exist.'));
                     }
 
                     Task.find({company_id: job.company_id}, function(err, tasks) {
+                        if(err) {
+                            return next(err);
+                        }
                         var jobreport_item = job.toObject();
-                        job.report_date = item.report_date;
+                        jobreport_item.report_date = item.report_date;
                         jobreport_item.job_id = jobreport_item._id;
                         delete jobreport_item._id;
                         jobreport_item.tasks = tasks;
