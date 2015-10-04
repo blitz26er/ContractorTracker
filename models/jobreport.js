@@ -2,9 +2,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 module.exports = mongoose.model('JobReport', new Schema({
-	no: String,
-	name: String,
-	description: String,
+	message: String,
+	report_date: Date,
 	user_id: Schema.ObjectId,
 	company_id: Schema.ObjectId,
 	job_id: Schema.ObjectId,

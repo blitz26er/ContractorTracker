@@ -74,7 +74,7 @@ router.route('/job')
     })
 
     .get(function(req, res, next) {
-        var item = req.body;
+        var item = req.query;
         item['user_id'] = req.profile['_id'];
         Job.find(item, function(err, jobs) {
             res.json(jobs);
