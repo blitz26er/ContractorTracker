@@ -65,4 +65,5 @@ app.use(function(err, req, res, next) {
 
 app.listen(app.get('http_port'), function() {
     console.log('Node app is running on port', app.get('http_port'));
+    new Date();
 });

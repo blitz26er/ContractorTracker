@@ -6,6 +6,7 @@ var Job = require('../models/job');
 var Company = require('../models/company');
 var Task = require('../models/task');
 var User = require('../models/user');
+var dateFormat = require('date-format');
 
 // ----------------------------------------------------
 router.route('/job_report')
@@ -57,10 +58,9 @@ router.route('/job_report_detail')
     
     // get a job report(accessed at GET)
     .get(function(req, res, next) {
-        console.log(req.query);
         var item = req.query;
         if(!item.report_date || item.report_date == '') {
-            item.report_date = new Date();
+            item.report_date = dateFormat('yyyy-MM-dd', new Date());
         }
         item.user_id = req.profile._id;
         console.log(item);
