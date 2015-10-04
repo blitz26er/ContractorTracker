@@ -12,7 +12,7 @@ var dateFormat = require('date-format');
 router.route('/job_report')
     // get a job reports(accessed at GET)
     .get(function(req, res, next) {
-        var item = req.body;
+        var item = req.query;
         if(!item.report_date_from && !item.report_date_to) {
             return next(new Error('Cannot search job reports.'));
         }
@@ -33,6 +33,7 @@ router.route('/job_report')
     .post(function(req, res, next) {
         var item = req.body;
         item.user_id = req.profile._id;
+        console.log(item);
         var jobreport = new JobReport(item);
         jobreport.save(function(err) {
             if(err) {
@@ -43,14 +44,6 @@ router.route('/job_report')
             jobreport_item.message = 'Job report created successfully.';
             jobreport_item.success = true;
             res.json(jobreport_item);
-        });
-    })
-
-    .get(function(req, res, next) {
-        var item = req.body;
-        item['user_id'] = req.profile['_id'];
-        Job.find(item, function(err, jobs) {
-            res.json(jobs);
         });
     });
 
@@ -63,7 +56,6 @@ router.route('/job_report_detail')
             item.report_date = dateFormat('yyyy-MM-dd', new Date());
         }
         item.user_id = req.profile._id;
-        console.log(item);
         JobReport.findOne(item, function(err, jobreport) {
             if(err) {
                 err.message = 'Job is not exist.';
