@@ -37,7 +37,7 @@ router.route('/task')
     })
 
     .get(function(req, res, next) {
-        var item = req.body;
+        var item = req.query;
         Task.find(item, function(err, tasks) {
             if(err) {
                 err.message = 'Cannot find tasks.';
