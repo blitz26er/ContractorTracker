@@ -110,21 +110,14 @@ router.route('/job_report/:id')
                 err.message = 'Submitted data is incorrect.';
 	            return next(err);
             }
-
-            try {
-                console.log(req.body.name);
-                jobreport.set(req.body);
-            } catch(e) {
-                console.log(e);
-                return next(e);
-            }
+            jobreport.set(req.body);
 	        // save the job
 	        jobreport.save(function(err) {
 	            if (err) {
                     err.message = 'Cannot update the job report.';
                     return next(err);
                 }
-                var job_item = job.toObject();
+                var job_item = jobreport.toObject();
                 job_item.success = true;
                 job_item.message = 'Job report updated successfully.';
 	            res.json(job_item);
