@@ -113,7 +113,7 @@ router.route('/job_report/:id')
             try {
                 console.log(req.body.name);
 	           jobreport.set(req.body);
-            catch(e) {
+            } catch(e) {
                 console.log(e);
                 return next(e);
             }
