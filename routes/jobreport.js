@@ -110,9 +110,10 @@ router.route('/job_report/:id')
                 err.message = 'Submitted data is incorrect.';
 	            return next(err);
             }
+
             try {
                 console.log(req.body.name);
-	           jobreport.set(req.body);
+                jobreport.set(req.body);
             } catch(e) {
                 console.log(e);
                 return next(e);
