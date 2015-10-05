@@ -111,6 +111,8 @@ router.route('/job_report/:id')
 	            return next(err);
             }
 
+            console.log(req.body);
+
 	        jobreport.set(req.body);
 	        // save the job
 	        jobreport.save(function(err) {
