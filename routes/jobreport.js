@@ -16,7 +16,7 @@ router.route('/job_report')
 
         console.log(item);
         if(!item.report_date_from && !item.report_date_to) {
-            return next(new Error('Cannot search job reports.'));
+            return next(new Error('Please input the period.'));
         }
         item.report_date = {$gt: item.report_date_from, $lt: item.report_date_to};
         if(item.user_id == '') {
@@ -45,17 +45,26 @@ router.route('/job_report')
     .post(function(req, res, next) {
         var item = req.body;
         item.user_id = req.profile._id;
-        console.log(item);
         var jobreport = new JobReport(item);
-        jobreport.save(function(err) {
+
+        var Job.findById(item.job_id, function(err, job) {
             if(err) {
-                err.message = 'Cannot create job report.';
-                return next(err);
+                err.message = 'Cannot exist the job.';
             }
-            jobreport_item = jobreport.toObject();
-            jobreport_item.message = 'Job report created successfully.';
-            jobreport_item.success = true;
-            res.json(jobreport_item);
+
+            item.no = job.no;
+            item.name = job.name;
+            item.description = job.description;
+            jobreport.save(function(err) {
+                if(err) {
+                    err.message = 'Cannot create job report.';
+                    return next(err);
+                }
+                jobreport_item = jobreport.toObject();
+                jobreport_item.message = 'Job report created successfully.';
+                jobreport_item.success = true;
+                res.json(jobreport_item);
+            });
         });
     });
 
