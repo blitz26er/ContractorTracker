@@ -47,7 +47,7 @@ router.route('/job_report')
         item.user_id = req.profile._id;
         var jobreport = new JobReport(item);
 
-        var Job.findById(item.job_id, function(err, job) {
+        Job.findById(item.job_id, function(err, job) {
             if(err) {
                 err.message = 'Cannot exist the job.';
             }
