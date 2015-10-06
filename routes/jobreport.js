@@ -13,11 +13,11 @@ router.route('/job_report')
     // get a job reports(accessed at GET)
     .get(function(req, res, next) {
         var item = req.query;
-        console.log(item);
+
         if(!item.report_date_from && !item.report_date_to) {
             return next(new Error('Cannot search job reports.'));
         }
-        item.report_date = {'&gt': item.report_date_from, '&lt': item.report_date_to};
+        item.report_date = {$gt: item.report_date_from, $lt: item.report_date_to};
         if(item.user_id == '') {
             delete item.user_id;
         }
@@ -30,7 +30,7 @@ router.route('/job_report')
 
         delete item.report_date_from;
         delete item.report_date_to;
-        
+        console.log(item);
         JobReport.find(item, function(err, jobreports) {
             if(err) {
                 err.message = 'Cannot search job reports.';
