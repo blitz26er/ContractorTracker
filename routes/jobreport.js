@@ -18,7 +18,7 @@ router.route('/job_report')
         if(!item.report_date_from && !item.report_date_to) {
             return next(new Error('Please input the period.'));
         }
-        item.report_date = {$gt: item.report_date_from, $lt: item.report_date_to};
+        item.report_date = {$gte: item.report_date_from, $lte: item.report_date_to};
         if(item.user_id == '') {
             delete item.user_id;
         }
@@ -36,7 +36,7 @@ router.route('/job_report')
                 err.message = 'Cannot search job reports.';
                 return next(err);
             }
-            console.log(jobreports);
+            console.log(jobreports.length);
             res.json(jobreports);
         });
     })

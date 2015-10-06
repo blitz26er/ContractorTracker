@@ -7,9 +7,9 @@ module.exports = mongoose.model('JobReport', new Schema({
 	no: String,
 	name: String,
 	description: String,
+	job_id: Schema.ObjectId,
 	user_id: Schema.ObjectId,
 	company_id: Schema.ObjectId,
-	job_id: Schema.ObjectId,
 	tasks: [{
 		_id: Schema.ObjectId,
 		name: String,
