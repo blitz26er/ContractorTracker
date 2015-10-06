@@ -14,6 +14,7 @@ router.route('/job_report')
     .get(function(req, res, next) {
         var item = req.query;
 
+        console.log(item);
         if(!item.report_date_from && !item.report_date_to) {
             return next(new Error('Cannot search job reports.'));
         }
@@ -30,13 +31,12 @@ router.route('/job_report')
 
         delete item.report_date_from;
         delete item.report_date_to;
-        console.log(item);
         JobReport.find(item, function(err, jobreports) {
             if(err) {
                 err.message = 'Cannot search job reports.';
                 return next(err);
             }
-
+            console(jobreports);
             res.json(jobreports);
         });
     })
