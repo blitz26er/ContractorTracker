@@ -13,12 +13,24 @@ router.route('/job_report')
     // get a job reports(accessed at GET)
     .get(function(req, res, next) {
         var item = req.query;
+        console.log(item);
         if(!item.report_date_from && !item.report_date_to) {
             return next(new Error('Cannot search job reports.'));
         }
         item.report_date = {'&gt': item.report_date_from, '&lt': item.report_date_to};
+        if(item.user_id == '') {
+            delete item.user_id;
+        }
+        if(item.company_id == '') {
+            delete item.company_id;
+        }
+        if(item.job_id == '') {
+            delete item.job_id;
+        }
+
         delete item.report_date_from;
         delete item.report_date_to;
+        
         JobReport.find(item, function(err, jobreports) {
             if(err) {
                 err.message = 'Cannot search job reports.';
@@ -111,7 +123,7 @@ router.route('/job_report/:id')
 	            return next(err);
             }
             jobreport.set(req.body);
-            
+
 	        // save the job
 	        jobreport.save(function(err) {
 	            if (err) {
