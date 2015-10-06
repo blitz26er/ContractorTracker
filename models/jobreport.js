@@ -4,6 +4,9 @@ var Schema = mongoose.Schema;
 module.exports = mongoose.model('JobReport', new Schema({
 	comment: String,
 	report_date: Date,
+	no: String,
+	name: String,
+	description: String,
 	user_id: Schema.ObjectId,
 	company_id: Schema.ObjectId,
 	job_id: Schema.ObjectId,
