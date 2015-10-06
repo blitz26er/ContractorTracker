@@ -45,8 +45,6 @@ router.route('/job_report')
     .post(function(req, res, next) {
         var item = req.body;
         item.user_id = req.profile._id;
-        var jobreport = new JobReport(item);
-
         Job.findById(item.job_id, function(err, job) {
             if(err) {
                 err.message = 'Cannot exist the job.';
@@ -55,6 +53,7 @@ router.route('/job_report')
             item.no = job.no;
             item.name = job.name;
             item.description = job.description;
+            var jobreport = new JobReport(item);
             jobreport.save(function(err) {
                 if(err) {
                     err.message = 'Cannot create job report.';
