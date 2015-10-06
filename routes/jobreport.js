@@ -36,7 +36,7 @@ router.route('/job_report')
                 err.message = 'Cannot search job reports.';
                 return next(err);
             }
-            console(jobreports);
+            console.log(jobreports);
             res.json(jobreports);
         });
     })
