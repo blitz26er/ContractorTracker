@@ -30,9 +30,8 @@ router.route('/job_report')
 
         delete item.report_date_from;
         delete item.report_date_to;
-        var query = {$query: item, $orderby: {report_date: -1}};
 
-        JobReport.find(query, function(err, jobreports) {
+        JobReport.find(item).sort({report_date: -1}).exec(function(err, jobreports) {
             if(err) {
                 err.message = 'Cannot search job reports.';
                 return next(err);
