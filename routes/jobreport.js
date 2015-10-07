@@ -14,7 +14,6 @@ router.route('/job_report')
     .get(function(req, res, next) {
         var item = req.query;
 
-        console.log(item);
         if(!item.report_date_from && !item.report_date_to) {
             return next(new Error('Please input the period.'));
         }
@@ -31,7 +30,9 @@ router.route('/job_report')
 
         delete item.report_date_from;
         delete item.report_date_to;
-        JobReport.find(item, function(err, jobreports) {
+        var query = {$query: item, $order: {report_date: -1}};
+
+        JobReport.find(query, function(err, jobreports) {
             if(err) {
                 err.message = 'Cannot search job reports.';
                 return next(err);
