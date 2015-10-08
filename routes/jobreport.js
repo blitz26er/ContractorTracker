@@ -53,17 +53,34 @@ router.route('/job_report')
             item.no = job.no;
             item.name = job.name;
             item.description = job.description;
-            var jobreport = new JobReport(item);
-            jobreport.save(function(err) {
+            User.findById(item.user_id, function(err, user) {
                 if(err) {
-                    err.message = 'Cannot create job report.';
+                    err.message = 'Cannot exist user.';
                     return next(err);
                 }
-                jobreport_item = jobreport.toObject();
-                jobreport_item.message = 'Job report created successfully.';
-                jobreport_item.success = true;
-                res.json(jobreport_item);
+
+                item.user_name = user.firstname+' '+user.lastname;
+                
+                var fee = 0;
+                for(var i=0; i<item.tasks.length; i++) {
+                    item.tasks[i].fee = item.tasks[i].rate*item.tasks[i].work_period;
+                    fee += tasks[i].fee;
+                }
+                item.fee = fee;
+
+                var jobreport = new JobReport(item);
+                jobreport.save(function(err) {
+                    if(err) {
+                        err.message = 'Cannot create job report.';
+                        return next(err);
+                    }
+                    jobreport_item = jobreport.toObject();
+                    jobreport_item.message = 'Job report created successfully.';
+                    jobreport_item.success = true;
+                    res.json(jobreport_item);
+                });
             });
+            
         });
     });
 
@@ -130,8 +147,16 @@ router.route('/job_report/:id')
                 err.message = 'Submitted data is incorrect.';
 	            return next(err);
             }
-            jobreport.set(req.body);
+            item = req.body;
 
+            var fee = 0;
+            for(var i=0; i<item.tasks.length; i++) {
+                item.tasks[i].fee = item.tasks[i].rate*item.tasks[i].work_period;
+                fee += tasks[i].fee;
+            }
+            item.fee = fee;
+            jobreport.set(item);
+                
 	        // save the job
 	        jobreport.save(function(err) {
 	            if (err) {
