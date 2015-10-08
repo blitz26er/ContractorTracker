@@ -64,7 +64,7 @@ router.route('/job_report')
                 var fee = 0;
                 for(var i=0; i<item.tasks.length; i++) {
                     item.tasks[i].fee = item.tasks[i].rate*item.tasks[i].work_period;
-                    fee += tasks[i].fee;
+                    fee += item.tasks[i].fee;
                 }
                 item.fee = fee;
 
@@ -152,7 +152,7 @@ router.route('/job_report/:id')
             var fee = 0;
             for(var i=0; i<item.tasks.length; i++) {
                 item.tasks[i].fee = item.tasks[i].rate*item.tasks[i].work_period;
-                fee += tasks[i].fee;
+                fee += item.tasks[i].fee;
             }
             item.fee = fee;
             jobreport.set(item);
