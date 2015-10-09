@@ -34,23 +34,25 @@ router.route('/home/recent')
         var query = {user_id: req.profile._id, report_date: 
             {$gte: dateFormat('yyyy-MM-dd', lastWeekStartDate), $lte: dateFormat('yyyy-MM-dd', currentDate)}};
         
-        JobReport.find(query).sort({report_date:-1}).execute(function(err, jobreports) {
+        JobReport.find(query).sort({report_date:-1}).exec(function(err, jobreports) {
             if(err) {
                 err.message = 'Error has been occured';
+
+                console.log(err);
                 return next(err);
             }
-
             var list = [ {'title':'This Week', 
                             report_date_from: new Date(dateFormat('yyyy-MM-dd', lastWeekStartDate)),
                             report_date_to: new Date(dateFormat('yyyy-MM-dd', lastWeekEndDate)),
                             jobs: []}, 
                         {'title':'Last Week', 
                             report_date_from: new Date(dateFormat('yyyy-MM-dd', thisWeekStartDate)),
-                            report_date_to: new Date(dateFormat('yyyy-MM-dd', thisWeekEndDate)), 
+                            report_date_to: new Date(dateFormat('yyyy-MM-dd', currentDate)), 
                             jobs: []} ];
 
-            for(var i=0, ni=reports.length; i<ni; i++) {
-                var report = reports[i];
+
+            for(var i=0, ni=jobreports.length; i<ni; i++) {
+                var jobreport = jobreports[i];
                 for(var j=0, nj=list.length; j<nj; j++) {
                     var item = list[j]; 
                     if(jobreport.report_date>=item.report_date_from && jobreport.report_date<=item.report_date_to) {
