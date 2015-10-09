@@ -26,11 +26,14 @@ router.route('/home')
 router.route('/home/recent')
     .get(function(req, res, next) {
         var currentDate = new Date();
+        var lastWeekStartDate = new Date();
+        var lastWeekEndDate = new Date();
+        var thisWeekStartDate = new Date();
         var day = currentDate.getDay(),
             diff = currentDate.getDate()-day;
-        var lastWeekStartDate = new Date(currentDate.setDate(diff-7));
-        var lastWeekEndDate = new Date(currentDate.setDate(diff-1));
-        var thisWeekStartDate = new Date(currentDate.setDate(diff)); 
+        lastWeekStartDate.setDate(diff-7);
+        lastWeekEndDate.setDate(diff-1);
+        thisWeekStartDate.setDate(diff); 
         var query = {user_id: req.profile._id, report_date: 
             {$gte: dateFormat('yyyy-MM-dd', lastWeekStartDate), $lte: dateFormat('yyyy-MM-dd', currentDate)}};
         
@@ -42,12 +45,12 @@ router.route('/home/recent')
                 return next(err);
             }
             var list = [ {'title':'This Week', 
-                            report_date_from: new Date(dateFormat('yyyy-MM-dd', lastWeekStartDate)),
-                            report_date_to: new Date(dateFormat('yyyy-MM-dd', lastWeekEndDate)),
+                            report_date_from: thisWeekStartDate,
+                            report_date_to: currentDate,
                             jobs: []}, 
                         {'title':'Last Week', 
-                            report_date_from: new Date(dateFormat('yyyy-MM-dd', thisWeekStartDate)),
-                            report_date_to: new Date(dateFormat('yyyy-MM-dd', currentDate)), 
+                            report_date_from: lastWeekStartDate,
+                            report_date_to: lastWeekEndDate, 
                             jobs: []} ];
 
 
