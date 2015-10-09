@@ -23,7 +23,7 @@ router.route('/home')
         });
     });
 
-router.route('/home/recent') 
+router.route('/home/recent')
     .get(function(req, res, next) {
         var currentDate = new Date();
         var day = currentDate.getDay(),
@@ -34,7 +34,7 @@ router.route('/home/recent')
         var query = {user_id: req.profile._id, report_date: 
             {$gte: dateFormat('yyyy-MM-dd', lastWeekStartDate), $lte: dateFormat('yyyy-MM-dd', currentDate)}};
         
-        JobReport.find(query).sort({report_date:-1}, function(err, jobreports) {
+        JobReport.find(query).sort({report_date:-1}).execute(function(err, jobreports) {
             if(err) {
                 err.message = 'Error has been occured';
                 return next(err);
