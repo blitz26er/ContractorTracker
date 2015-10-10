@@ -125,7 +125,7 @@ router.route('/signup').
 	    				html += '">Verify email address</a>';
 	    				email.setHtml(html);
 	    				sendgrid.send(email, function(err, json) {
-
+	    					console.log(err);
 	    				});
 	    				res.json({success: true, message: 'Register success.'});
 	    			}
