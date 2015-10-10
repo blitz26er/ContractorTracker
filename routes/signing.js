@@ -3,6 +3,8 @@ var jwt = require('jsonwebtoken');
 var config = require('../config');
 var validator = require('validator');
 var router = express.Router();
+var sendgrid = require('sendgrid')(config.sendgrid.api_key, config.sendgrid.api_secret);
+var arc4 = require('arc4');
 // ==================================================================
 // Signin, Signout
 // ==================================================================
@@ -41,6 +43,37 @@ router.route('/signout').
     	});
 	});
 
+router.route('/verify/:id/:timestamp').
+	get(function(req, res, next) {
+		User.findById(req.param, function(err, user) {
+			if(err) {
+				timestamp_decipher = arc4('arc4', config.secret);
+				var timestamp = timestamp_decipher.decodeString(req.param.timestamp);
+				var currentDate = new Date();
+				var sendDate = new Date(timestamp);
+				var diff = currentDate.getTime()-sendDate.getTime();
+				if(diff>1000*60*30) {
+					return res.render('/views/verify', {message: 'The request is not vaild. Please try again.'});
+				}
+				
+				var decipher = arc4('arc4', timestamp);
+				var id = decipher.decodeString(req.param.id);
+				User.findById(id, function(err, user) {
+					if(err || user == null) {
+						return res.render('/views/verify', {message: 'Request not verify.'});
+					}
+					user.active = true;
+					user.save(function(err) {
+						if(err) {
+							return res.render('/views/verify', {message: 'Request not verify.'});
+						}
+						return res.render('/views/verify', {message: 'Verify user successfully.'});
+					});
+				})
+			}
+		})
+	})
+
 router.route('/signup').
 	post(function(req, res, next) {
 		var item = req.body;
@@ -75,6 +108,25 @@ router.route('/signup').
 	    				err.message = 'Register fail.';
 	    				return next(err);
 	    			} else {
+	    				var currentDate = new Date();
+	    				var timestamp_cipher = arc4('arc4', config.secret);
+	    				var timestamp = currentDate.toString(); 
+	    				var encrypt_timestamp = timestamp_cipher.encodeString(timestamp);
+	    				var cipher = arc4('arc4', timestamp);
+	    				var encrypt_id = cipher.encodeString(user._id);
+	    				var email = sendgrid.Email({
+	    					to: user.email,
+	    					from: 'blitz26er@gmail.com',
+	    					subject: 'Email Verification',
+	    				});
+
+	    				var html = '<h1>Email Verification</h1>';
+	    				html += '<a href="'+req.protocol+'://'+req.get('host')+'/signing/verify/'+encrypt_id+'/'+encrypt_timestamp;
+	    				html += '">Verify email address</a>';
+	    				email.setHtml(html);
+	    				sendgrid.send(email, function(err, json) {
+
+	    				});
 	    				res.json({success: true, message: 'Register success.'});
 	    			}
 	    		});

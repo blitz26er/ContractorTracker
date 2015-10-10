@@ -19,7 +19,12 @@
         "shortid" : "^2.2.2",
         "async" : "^1.4.2",
         "deasync" : "^0.1.2",
-        "date-format" : "^0.0.2"
+        "date-format" : "^0.0.2",
+        "sendgrid": "^1.9.2",
+        // "tiny-cipher": "^1.0.1",
+        // "aes-js": "^0.2.0",
+        // "json-decrypt": "^0.1.2",
+        "arc4": "^3.2.0"
     },
     "engines": {
         "node": "0.12.7"
