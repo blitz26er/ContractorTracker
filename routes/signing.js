@@ -123,7 +123,7 @@ router.route('/signup').
 	    				var html = '<h1>Email Verification</h1>';
 	    				html += '<a href="'+req.protocol+'://'+req.get('host')+'/signing/verify/'+encrypt_id+'/'+encrypt_timestamp;
 	    				html += '">Verify email address</a>';
-	    				email.setHtml(html);
+	    				email.html = html;
 	    				sendgrid.send(email, function(err, json) {
 	    					console.log(err);
 	    				});
