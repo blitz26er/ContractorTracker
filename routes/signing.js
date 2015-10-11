@@ -107,6 +107,23 @@ router.route('/signup').
 	    				err.message = 'Register fail.';
 	    				return next(err);
 	    			} else {
+	    	// 			var sendgrid = require('sendgrid')(config.sendgrid.api_key);
+	    	// 			var email = sendgrid.Email({
+	    	// 				to: user.email,
+	    	// 				from: 'blitz26er@gmail.com',
+	    	// 				subject: 'Email Verification',
+	    	// 				text: 'What are is?'
+	    	// 			});
+
+	    	// 			sendgrid.send(email, function(err, json) {
+						//   if (err) { return console.error(err); }
+						//   console.log(json);
+						// });
+	    				// var html = '<h1>Email Verification</h1>';
+	    				// html += '<a href="'+req.protocol+'://'+req.get('host')+'/signing/verify/'+encrypt_id+'/'+encrypt_timestamp;
+	    				// html += '">Verify email address</a>';
+	    				// email.html = html;
+
 	    				var currentDate = new Date();
 	    				var timestamp_cipher = arc4('arc4', config.secret);
 	    				var timestamp = currentDate.toString(); 
@@ -114,23 +131,8 @@ router.route('/signup').
 	    				var cipher = arc4('arc4', timestamp);
 	    				var encrypt_id = cipher.encodeString(user._id);
 	    				console.log(config.sendgrid.api_key);
-	    				var sendgrid = require('sendgrid')(config.sendgrid.api_key);
-	    				var email = sendgrid.Email({
-	    					to: user.email,
-	    					from: 'blitz26er@gmail.com',
-	    					subject: 'Email Verification',
-	    					text: 'What are is?'
-	    				});
-	    				console.log(email);
-	    				// var html = '<h1>Email Verification</h1>';
-	    				// html += '<a href="'+req.protocol+'://'+req.get('host')+'/signing/verify/'+encrypt_id+'/'+encrypt_timestamp;
-	    				// html += '">Verify email address</a>';
-	    				// email.html = html;
-
-	    				sendgrid.send(email, function(err, json) {
-	    					console.log(err);
-	    					console.log(json);
-	    				});
+	    				
+	    				
 	    				res.json({success: true, message: 'Register success.'});
 	    			}
 	    		});
