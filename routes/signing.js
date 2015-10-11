@@ -3,7 +3,7 @@ var jwt = require('jsonwebtoken');
 var config = require('../config');
 var validator = require('validator');
 var router = express.Router();
-var sendgrid = require('sendgrid')(config.sendgrid.api_key, config.sendgrid.api_secret);
+var sendgrid = require('sendgrid')(config.sendgrid.api_key);
 var arc4 = require('arc4');
 // ==================================================================
 // Signin, Signout
@@ -118,14 +118,17 @@ router.route('/signup').
 	    					to: user.email,
 	    					from: 'blitz26er@gmail.com',
 	    					subject: 'Email Verification',
+	    					text: 'What are is?'
 	    				});
+	    				console.log(email);
+	    				// var html = '<h1>Email Verification</h1>';
+	    				// html += '<a href="'+req.protocol+'://'+req.get('host')+'/signing/verify/'+encrypt_id+'/'+encrypt_timestamp;
+	    				// html += '">Verify email address</a>';
+	    				// email.html = html;
 
-	    				var html = '<h1>Email Verification</h1>';
-	    				html += '<a href="'+req.protocol+'://'+req.get('host')+'/signing/verify/'+encrypt_id+'/'+encrypt_timestamp;
-	    				html += '">Verify email address</a>';
-	    				email.html = html;
 	    				sendgrid.send(email, function(err, json) {
 	    					console.log(err);
+	    					console.log(json);
 	    				});
 	    				res.json({success: true, message: 'Register success.'});
 	    			}

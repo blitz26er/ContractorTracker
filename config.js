@@ -3,7 +3,6 @@ module.exports = {
     'secret': 'ilovescotchyscotch',
     'database': 'mongodb://root:root@ds027799.mongolab.com:27799/contractor_tracker',
     'sendgrid': {
-    	'api_key': 'nswad1',
-    	'api_secret': 'cabins44+'
+    	'api_key': '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',
     }
 };
