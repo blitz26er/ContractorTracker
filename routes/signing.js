@@ -3,7 +3,6 @@ var jwt = require('jsonwebtoken');
 var config = require('../config');
 var validator = require('validator');
 var router = express.Router();
-var sendgrid = require('sendgrid')(config.sendgrid.api_key);
 var arc4 = require('arc4');
 // ==================================================================
 // Signin, Signout
@@ -114,6 +113,7 @@ router.route('/signup').
 	    				var encrypt_timestamp = timestamp_cipher.encodeString(timestamp);
 	    				var cipher = arc4('arc4', timestamp);
 	    				var encrypt_id = cipher.encodeString(user._id);
+	    				var sendgrid = require('sendgrid')(config.sendgrid.api_key);
 	    				var email = sendgrid.Email({
 	    					to: user.email,
 	    					from: 'blitz26er@gmail.com',
