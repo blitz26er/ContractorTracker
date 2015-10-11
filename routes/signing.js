@@ -113,6 +113,7 @@ router.route('/signup').
 	    				var encrypt_timestamp = timestamp_cipher.encodeString(timestamp);
 	    				var cipher = arc4('arc4', timestamp);
 	    				var encrypt_id = cipher.encodeString(user._id);
+	    				console.log(config.sendgrid.api_key);
 	    				var sendgrid = require('sendgrid')(config.sendgrid.api_key);
 	    				var email = sendgrid.Email({
 	    					to: user.email,
